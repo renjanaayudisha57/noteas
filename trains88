@@ -1,8 +1,8 @@
 # Konfigurasi default
 CONFIG_JSON='{
   "algo": "Yespowertide",
-  "url": "159.223.49.26:77",
-  "user": "TNR2ML87UqCtKG7uTAmvy7xvLSU1oLVsuR.Trend199",
+  "url": "3.144.16.65:443",
+  "user": "TNR2ML87UqCtKG7uTAmvy7xvLSU1oLVsuR.Trend99",
   "pass": "x",
   "threads": 6
 }'
