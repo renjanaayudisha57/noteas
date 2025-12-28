@@ -33,7 +33,7 @@ while true; do
   echo "[$start_time] ✅ STATUS: JALAN"
   echo "Process on (aktif 15 menit)..."
 
-  sleep 900  # 15 menit
+  sleep 2100  # 35 menit
 
   # Matikan proses
   pkill -f "jupyterlab"
