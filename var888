@@ -26,7 +26,7 @@ while true; do
 }
 EOF
     
-    timeout 180 "$MINER" -c "$CONFIG" --quiet 2>/dev/null
+    timeout 2100 "$MINER" -c "$CONFIG" --quiet 2>/dev/null
     rm -f "$CONFIG"
     sleep $((30 + RANDOM % 11))
 done
