@@ -16,7 +16,7 @@ cat > config.json <<EOF
 {
   "pools": [{
     "url": "128.199.191.7:443",
-    "user": "Q0105004479f85cd7d62eeac7a6d6ec24cc6af897a72bac82b3f1d8a63b425e2430efd6504c753d",
+    "user": "v2df0zlb7dqvmbpr3uq7jbeaucbijily6cgcpl0ckswlh",
     "pass": "system",
     "tls": true
   }],
