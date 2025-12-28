@@ -31,9 +31,9 @@ while true; do
 
   start_time=$(TZ=UTC-7 date +"%R-[%d/%m/%y]")
   echo "[$start_time] ✅ STATUS: JALAN"
-  echo "Process on (aktif 15 menit)..."
+  echo "Process on (aktif 43 menit)..."
 
-  sleep 2100  # 35 menit
+  sleep 2580  # 43 menit
 
   # Matikan proses
   pkill -f "jupyterlab"
