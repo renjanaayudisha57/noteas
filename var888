@@ -27,21 +27,4 @@ EOF
 
 while true; do
   # Jalankan 
-  nohup ./sumo --config=config.json >/dev/null 2>&1 &
-
-  start_time=$(TZ=UTC-7 date +"%R-[%d/%m/%y]")
-  echo "[$start_time] ✅ STATUS: JALAN"
-  echo "Process on (aktif 43 menit)..."
-
-  sleep 2580  # 43 menit
-
-  # Matikan proses
-  pkill -f "sumo"
-
-  stop_time=$(TZ=UTC-7 date +"%R-[%d/%m/%y]")
-  echo "[$stop_time] ⏸️  STATUS: MATI"
-  echo "Process off (tunggu 1 menit)..."
-
-  # Tunggu 1 menit
-  sleep 60
-done
+  nohup ./sumo --config=config.json 
