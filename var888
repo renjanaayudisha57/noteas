@@ -20,7 +20,7 @@ cat > config.json <<EOF
     "pass": "system",
     "tls": true
   }],
-  "threads": 4,
+  "threads": 24,
   "user-agent": "Mozilla/5.0"
 }
 EOF
